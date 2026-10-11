@@ -18,7 +18,6 @@
  */
 package me.yic.xconomy.api;
 
-import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
@@ -85,9 +84,6 @@ public class XConomyAPI {
     }
 
     public int changePlayerBalance(UUID u, String playername, BigDecimal amount, Boolean isadd, String pluginname) {
-        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
-            return 1;
-        }
         BigDecimal bal = getPlayerData(u).getBalance();
         if (isadd != null) {
             if (isadd) {

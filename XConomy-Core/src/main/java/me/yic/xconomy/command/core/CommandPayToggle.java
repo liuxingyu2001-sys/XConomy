@@ -49,10 +49,6 @@ public class CommandPayToggle extends CommandCore{
             return true;
         } else if (args.length == 1) {
             if (sender.isOp() || sender.hasPermission("xconomy.admin.paytoggle")) {
-                if (check()) {
-                    sendMessages(sender, PREFIX + MessagesManager.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令"));
-                    return true;
-                }
                 PlayerData pd = DataCon.getPlayerData(args[0]);
                 if (pd == null) {
                     sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));

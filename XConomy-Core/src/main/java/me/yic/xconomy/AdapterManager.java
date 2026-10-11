@@ -21,7 +21,6 @@ package me.yic.xconomy;
 import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.adapter.comp.CPlugin;
 import me.yic.xconomy.info.MessageConfig;
-import me.yic.xconomy.info.SyncChannalType;
 import me.yic.xconomy.lang.MessagesManager;
 
 public class AdapterManager {
@@ -29,9 +28,6 @@ public class AdapterManager {
     public static boolean foundvaultOfflinePermManager = false;
 
     public final static CPlugin PLUGIN = new CPlugin();
-
-    //public static ScheduledExecutorService ScheduledThreadPool;
-    //public static ExecutorService FixedThreadPool;
 
     public static String translateColorCodes(MessageConfig message) {
         return CChat.translateAlternateColorCodes('&', MessagesManager.messageFile.getString(message.toString()));
@@ -42,18 +38,6 @@ public class AdapterManager {
     }
 
 
-    public static boolean BanModiftyBalance() {
-        if (!XConomyLoad.getSyncData_Enable()){
-            return false;
-        }
-        if (!PLUGIN.getOnlinePlayersisEmpty()){
-            return false;
-        }
-        if (XConomyLoad.Config.DISABLE_CACHE){
-            return false;
-        }
-        return !XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS);
-    }
     public static boolean checkisMainThread(){
         return PLUGIN.isSync();
     }
@@ -65,8 +49,4 @@ public class AdapterManager {
     public static void runTaskLaterAsynchronously(Runnable runnable, long seconds){
         PLUGIN.runTaskLaterAsynchronously(runnable, seconds * 20L);
     }
-
-/*    public static ScheduledFuture<?> runTaskTimerAsynchronously(Runnable runnable, long seconds){
-        return ScheduledThreadPool.scheduleAtFixedRate(runnable, seconds, seconds, TimeUnit.SECONDS);
-    }*/
 }

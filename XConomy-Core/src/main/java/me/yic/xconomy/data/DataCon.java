@@ -33,7 +33,7 @@ import me.yic.xconomy.data.syncdata.SyncDelData;
 import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.RecordInfo;
 import me.yic.xconomy.info.SyncChannalType;
-import me.yic.xconomy.utils.SendPluginMessage;
+
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -224,10 +224,9 @@ public class DataCon {
 
 
     public static void SendMessTask(SyncData pd) {
+        // 跨服数据仅通过 Redis 发布
         if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             RedisPublisher.publishmessage(pd.toByteArray(XConomy.syncversion).toByteArray());
-        }else if (XConomyLoad.Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
-            SendPluginMessage.SendMessTask("xconomy:acb", pd);
         }
     }
 

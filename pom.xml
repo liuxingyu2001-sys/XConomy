@@ -8,8 +8,6 @@
     <version>${revision}</version>
     <modules>
         <module>XConomy-Bukkit</module>
-        <module>XConomy-Sponge7</module>
-        <module>XConomy-Sponge8</module>
         <module>XConomy-Paper</module>
         <module>XConomy-Core</module>
     </modules>
@@ -17,8 +15,18 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>2.26.3</revision>
+        <revision>2.26.4</revision>
     </properties>
+
+    <dependencies>
+        <!--@NotNull / @Nullable used across the modules. Previously pulled in transitively by kotlin-stdlib. -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>23.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

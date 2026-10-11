@@ -57,11 +57,6 @@ public class CommandCore {
                     }
                     if (args.length == 2 && args[0].equalsIgnoreCase("deldata")) {
 
-                        if (check()) {
-                            sendMessages(sender, PREFIX + MessagesManager.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令"));
-                            return true;
-                        }
-
                         PlayerData pd = DataCon.getPlayerData(args[1]);
                         if (pd == null) {
                             sendMessages(sender, PREFIX + translateColorCodes(MessageConfig.NO_ACCOUNT));
@@ -168,10 +163,6 @@ public class CommandCore {
         }
 
         return true;
-    }
-
-    public static boolean check() {
-        return AdapterManager.BanModiftyBalance();
     }
 
     public static boolean checkMessage(String message) {
@@ -302,9 +293,6 @@ public class CommandCore {
         if (!XConomyLoad.getSyncData_Enable()) {
             return;
         }
-        if (check() && AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
-            return;
-        }
 
         SyncMessage sm;
         if (!ispublic) {
@@ -322,10 +310,6 @@ public class CommandCore {
 
     protected static void syncpr(int type, UUID u, Boolean value) {
         if (!XConomyLoad.getSyncData_Enable()) {
-            return;
-        }
-
-        if (check() && AdapterManager.PLUGIN.getOnlinePlayersisEmpty()) {
             return;
         }
 

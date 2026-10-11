@@ -31,11 +31,11 @@ public class DefaultConfig {
     public static CConfig config;
 
     public DefaultConfig() {
-        //setMaxThread();
         setUUIDMode();
         setnonplayeraccount();
         setformatbalance();
         setpaytips();
+        setliuchat();
     }
     public boolean ISOLDCONFIG = false;
 
@@ -56,6 +56,12 @@ public class DefaultConfig {
     public boolean TRANSACTION_RECORD = config.getBoolean("Settings.transaction-record");
     public boolean PAY_TIPS = false;
     public boolean USERNAME_IGNORE_CASE = config.getBoolean("Settings.username-ignore-case");
+    public boolean HIDDEN_IN_BALTOP = config.getBoolean("Settings.hidden-in-baltop");
+
+    // LiuChat 跨服转账提示
+    public boolean LIUCHAT_CROSS_SERVER_PAY_TIPS = false;
+    public String LIUCHAT_PAY_TIP_FORMAT = "&8[&b跨服转账&8] &f%player% &7给 &f%target% &7转账了 &a%amount%";
+    public boolean LIUCHAT_TIP_ONLY_ONLINE = true;
 
     public boolean NON_PLAYER_ACCOUNT = config.getBoolean("non-player-account.enable");
     public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
@@ -116,18 +122,6 @@ public class DefaultConfig {
         }
     }
 
-/*    public void setMaxThread(){
-        if (config.contains("Settings.core-poolsize")) {
-            MAX_THREAD = config.getInt("Settings.core-poolsize");
-            if (MAX_THREAD <= 1){
-                MAX_THREAD = 1;
-            }
-        }
-        AdapterManager.ScheduledThreadPool = Executors.newScheduledThreadPool(MAX_THREAD / 2);
-        AdapterManager.FixedThreadPool = Executors.newFixedThreadPool(MAX_THREAD / 2);
-    }*/
-
-
     private void setnonplayeraccount() {
         if (NON_PLAYER_ACCOUNT) {
             if (config.getBoolean("non-player-account.whitelist.enable")) {
@@ -143,15 +137,10 @@ public class DefaultConfig {
         }
 
 
-//        if (XConomyLoad.DConfig.getStorageType() == 0 || XConomyLoad.DConfig.getStorageType() == 1) {
-//            SYNCDATA_ENABLE = !XConomyLoad.DConfig.gethost().equalsIgnoreCase("Default");
-//        }
-
         if (config.getBoolean("SyncData.enable")) {
+            // 跨服同步仅支持 Redis 通道（Velocity / BungeeCord 代理均无需额外安装插件）
             String channeltype = config.getString("SyncData.channel-type");
-            if (channeltype.equalsIgnoreCase("BungeeCord")) {
-                SYNCDATA_TYPE = SyncChannalType.BUNGEECORD;
-            }else if (channeltype.equalsIgnoreCase("Redis")) {
+            if (channeltype != null && channeltype.equalsIgnoreCase("Redis")) {
                 SYNCDATA_TYPE = SyncChannalType.REDIS;
             }
         }
@@ -160,6 +149,15 @@ public class DefaultConfig {
     private void setpaytips() {
         if (TRANSACTION_RECORD) {
             PAY_TIPS = config.getBoolean("Settings.offline-pay-transfer-tips");
+        }
+    }
+
+    private void setliuchat() {
+        LIUCHAT_CROSS_SERVER_PAY_TIPS = config.getBoolean("LiuChat.cross-server-pay-tips");
+        LIUCHAT_TIP_ONLY_ONLINE = !config.contains("LiuChat.tip-only-online") || config.getBoolean("LiuChat.tip-only-online");
+        String format = config.getString("LiuChat.pay-tip-format");
+        if (format != null && !format.isEmpty()) {
+            LIUCHAT_PAY_TIP_FORMAT = format;
         }
     }
 }

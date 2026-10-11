@@ -118,11 +118,6 @@ public class CommandBalance extends CommandCore{
                     return true;
                 }
 
-                if (check()) {
-                    sendMessages(sender, PREFIX + MessagesManager.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令"));
-                    return true;
-                }
-
                 if (!isDouble(args[2])) {
                     sendMessages(sender, PREFIX + translateColorCodes("invalid_amount"));
                     return true;
@@ -314,11 +309,6 @@ public class CommandBalance extends CommandCore{
 
                 if (XConomyLoad.Config.UUIDMODE.equals(UUIDMode.SEMIONLINE) && args[2].equalsIgnoreCase("online")) {
                     sendMessages(sender, PREFIX + MessagesManager.systemMessage("§c该指令不支持在半正版模式中使用"));
-                    return true;
-                }
-
-                if (check()) {
-                    sendMessages(sender, PREFIX + MessagesManager.systemMessage("§cBC模式开启的情况下,无法在无人的服务器中使用OP命令"));
                     return true;
                 }
 

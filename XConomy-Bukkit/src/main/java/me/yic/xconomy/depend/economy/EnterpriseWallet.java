@@ -19,8 +19,6 @@ package me.yic.xconomy.depend.economy;/*
 
 import com.github.sanctum.economy.construct.EconomyAction;
 import com.github.sanctum.economy.construct.account.PlayerWallet;
-import me.yic.xconomy.AdapterManager;
-import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
 import org.bukkit.OfflinePlayer;
@@ -37,11 +35,6 @@ public class EnterpriseWallet extends PlayerWallet {
 
     @Override
     public EconomyAction setBalance(BigDecimal amount) {
-        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
-            return new EconomyAction(getHolder(), false,
-                    "[BungeeCord] No player in server");
-        }
-
         if (DataFormat.isMAX(amount)) {
             return new EconomyAction(getHolder(), false,  "Max balance!");
         }
@@ -96,10 +89,6 @@ public class EnterpriseWallet extends PlayerWallet {
     @SuppressWarnings("ConstantConditions")
     @Override
     public EconomyAction withdraw(BigDecimal amount) {
-        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
-            return new EconomyAction(getHolder(), false, "[BungeeCord] No player in server");
-        }
-
         BigDecimal bal = getBalance();
 
         if (bal.compareTo(amount) < 0) {
@@ -119,11 +108,6 @@ public class EnterpriseWallet extends PlayerWallet {
     @SuppressWarnings("ConstantConditions")
     @Override
     public EconomyAction deposit(BigDecimal amount) {
-        if (XConomyLoad.getSyncData_Enable() & AdapterManager.BanModiftyBalance()) {
-            return new EconomyAction(getHolder(), false,
-                    "[BungeeCord] No player in server");
-        }
-
         BigDecimal bal = getBalance();
 
         if (DataFormat.isMAX(bal.add(amount))) {

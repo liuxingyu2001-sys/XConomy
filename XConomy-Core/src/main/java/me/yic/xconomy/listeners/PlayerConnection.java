@@ -43,6 +43,13 @@ public class PlayerConnection{
         if (player.hasPermission("xconomy.admin.hidden")){
             TabListCon.remove_Tab_PlayerList(player.getName());
             HiddenINFO.addHidden(player.getName());
+            if (XConomyLoad.Config.HIDDEN_IN_BALTOP) {
+                Integer hidden = Cache.phids.get(player.getUniqueId());
+                if (hidden == null || hidden != 1) {
+                    DataLink.setTopBalHide(player.getUniqueId(), 1);
+                    DataCon.baltop();
+                }
+            }
         }else {
             TabListCon.add_Tab_PlayerList(player.getName());
 

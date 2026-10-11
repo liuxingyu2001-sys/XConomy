@@ -1,32 +1,30 @@
 ![img.png](img.png)
-## 关于 About
-基础经济插件，以Vault为前置，支持BossShop，QuickShop等这些使用Vault API的插件  
-Sponge版使用Sponge内置的经济API  
-支持MySQL保存玩家数据，具有缓存功能，且支持BungeeCord/Velocity子服的数据同步, 或者通过Redis进行数据同步
+## 关于
 
+基础经济插件，以 Vault 为前置，支持 BossShop、QuickShop 等使用 Vault API 的插件。
+支持 MySQL / MariaDB / SQLite 保存玩家数据，并可通过 Redis 进行多服数据同步。
 
-The basic economy plugin, supports other plugins that use the Vault API.  
-The SPONGE version uses the economic API built into SPONGE  
-Supporting MySQL to save player data, and synchronize data between Bungeecord/Velocity servers or through Redis.
+本项目面向 **Paper / Spigot 服务端**，代理端使用 **Velocity**，无需在代理端安装插件。
 
-## FAQ
-请查看 [FAQ](https://github.com/YiC200333/XConomy/blob/master/FAQ/Chinese.md)  
-Please check [FAQ](https://github.com/YiC200333/XConomy/blob/master/FAQ/English.md)
+## 特性
+
+- 多种存储后端：SQLite、MySQL、MariaDB
+- MySQL 交易记录，支持玩家离线期间的转账提示
+- Redis 跨服数据同步（无需在代理端安装插件）
+- 跨服转账提示：
+  - 开启 `SyncData`(Redis) 时，使用内置 Redis 通道向目标服务器投递私密提示
+  - 未开启同步时，使用 LiuChat 跨服公告兜底
+- `/baltop hide|display` 隐藏 / 显示排行数据（玩家自助 + 管理员指定）
+- 指令玩家名 TAB 补全支持跨服在线玩家
+
+## 文档
+
+请查看 [说明文档](docs/说明文档.md)。
 
 ## XConomyAPI
-请查看 [XConomyAPI](https://github.com/YiC200333/XConomyAPI)  
-Please check [XConomyAPI](https://github.com/YiC200333/XConomyAPI)
 
-## 下载 Download
-仅在这些网站上发布过  
-Only published on these websites
+请查看 [XConomyAPI](https://github.com/YiC200333/XConomyAPI)。
 
-~~MCBBS: https://www.mcbbs.net/thread-962904-1-1.html~~
-
-MineBBS: https://www.minebbs.com/resources/xconomy-bc-spigot-sponge.7410/
-
-Spigot: https://www.spigotmc.org/resources/xconomy.75669/
-
-Sponge: https://ore.spongepowered.org/YiC/XConomy
+## 下载
 
 Github: https://github.com/YiC200333/XConomy/releases

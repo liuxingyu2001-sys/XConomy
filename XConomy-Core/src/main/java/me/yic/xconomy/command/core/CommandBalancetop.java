@@ -24,11 +24,16 @@ import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.info.MessageConfig;
+import me.yic.xconomy.lang.MessagesManager;
 
 import java.util.UUID;
 
 public class CommandBalancetop extends CommandCore{
     public static boolean onCommand(CSender sender, String[] args) {
+        if (args.length == 1 && (args[0].equalsIgnoreCase("hide") || args[0].equalsIgnoreCase("display"))) {
+            return selfToggle(sender, args[0]);
+        }
+
         if (args.length == 0 || args.length == 1) {
 
             if (!(sender.isOp() || sender.hasPermission("xconomy.user.balancetop"))) {
@@ -78,9 +83,32 @@ public class CommandBalancetop extends CommandCore{
                     DataLink.setTopBalHide(targetUUID, 0);
                     sendMessages(sender, PREFIX + translateColorCodes("top_displayed").replace("%player%", args[1]));
                 }
+                DataCon.baltop();
 
             }
         }
+        return true;
+    }
+
+    /**
+     * 玩家自助隐藏 / 显示自己在排行榜中的数据。
+     * 管理员指定其他玩家的用法在双参数分支中处理。
+     */
+    private static boolean selfToggle(CSender sender, String action) {
+        if (!sender.isPlayer()) {
+            sendMessages(sender, PREFIX + MessagesManager.systemMessage("§6控制台无法使用该指令"));
+            return true;
+        }
+        if (!(sender.isOp() || sender.hasPermission("xconomy.user.balancetop.hide"))) {
+            sendMessages(sender, PREFIX + translateColorCodes("no_permission"));
+            return true;
+        }
+        boolean hide = action.equalsIgnoreCase("hide");
+        UUID targetUUID = sender.toPlayer().getUniqueId();
+        DataLink.setTopBalHide(targetUUID, hide ? 1 : 0);
+        DataCon.baltop();
+        String key = hide ? "top_hidden" : "top_displayed";
+        sendMessages(sender, PREFIX + translateColorCodes(key).replace("%player%", sender.getName()));
         return true;
     }
 

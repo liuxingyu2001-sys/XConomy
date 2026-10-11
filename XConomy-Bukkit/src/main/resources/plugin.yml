@@ -5,7 +5,7 @@ author: YiC
 website: https://www.spigotmc.org/resources/xconomy.75669/
 load: STARTUP
 loadbefore:  [ PlotSquared ]
-softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI, Towny ]
+softdepend: [ Vault, Enterprise, DatabaseDrivers, MPoints, PlaceholderAPI, Towny, LiuChat ]
 api-version: "1.13"
 
 commands:
@@ -45,6 +45,8 @@ permissions:
     children:
       xconomy.user.pay.receive: true
   xconomy.user.balancetop:
+    default: true
+  xconomy.user.balancetop.hide:
     default: true
   xconomy.user.paytoggle:
     default: true

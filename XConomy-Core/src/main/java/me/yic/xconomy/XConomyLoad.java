@@ -47,33 +47,13 @@ public class XConomyLoad{
 
     public static void Initial(){
         DataCon.baltop();
-
-        if (Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
-            if ((DConfig.getStorageType() == 0 || DConfig.getStorageType() == 1)
-                    && (DConfig.gethost().equalsIgnoreCase("Default"))) {
-                XConomy.getInstance().logger("SQLite文件路径设置错误", 1, null);
-                XConomy.getInstance().logger("BungeeCord同步未开启", 1, null);
-                Config.SYNCDATA_TYPE = SyncChannalType.OFF;
-            } else {
-                AdapterManager.PLUGIN.registerIncomingPluginChannel("xconomy:aca", "me.yic.xconomy.listeners.SPsync");
-                AdapterManager.PLUGIN.registerOutgoingPluginChannel("xconomy:acb");
-                XConomy.getInstance().logger("已开启BungeeCord同步", 0, null);
-            }
-        }
-
         DataFormat.load();
     }
 
     public static void Unload() {
-        if (Config.SYNCDATA_TYPE.equals(SyncChannalType.BUNGEECORD)) {
-            AdapterManager.PLUGIN.unregisterIncomingPluginChannel("xconomy:aca", "me.yic.xconomy.listeners.SPsync");
-            AdapterManager.PLUGIN.unregisterOutgoingPluginChannel("xconomy:acb");
-        }else if(Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
+        if (Config.SYNCDATA_TYPE.equals(SyncChannalType.REDIS)) {
             RedisConnection.close();
         }
-
-        //AdapterManager.ScheduledThreadPool.shutdown();
-        //AdapterManager.FixedThreadPool.shutdown();
         SQL.close();
     }
 

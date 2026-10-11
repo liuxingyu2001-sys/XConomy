@@ -4,7 +4,6 @@ package me.yic.xconomy.adapter;
 import me.yic.xconomy.adapter.comp.CPlayer;
 import me.yic.xconomy.data.syncdata.PlayerData;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,14 +24,4 @@ public interface iPlugin {
     void runTaskAsynchronously(Runnable ra);
 
     void runTaskLaterAsynchronously(Runnable ra, long time);
-
-    void sendPluginMessage(String channel, ByteArrayOutputStream stream);
-
-    void registerIncomingPluginChannel(String channel, String classname);
-
-    void registerOutgoingPluginChannel(String channel);
-
-    void unregisterIncomingPluginChannel(String channel, String classname);
-
-    void unregisterOutgoingPluginChannel(String channel);
 }

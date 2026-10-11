@@ -1,27 +1,27 @@
 Settings:
-  #SQLite MySQL MariaDB
-  #MariaDB require DatabaseDrivers
+  #存储类型：SQLite MySQL MariaDB
+  #MariaDB 需要安装 DatabaseDrivers
   storage-type: SQLite
-  #Use connection pool or not
-  #Require 'slf4j' dependencies
-  #At least java version 11 is required
+  #是否使用连接池
+  #需要 'slf4j' 依赖
+  #最低要求 Java 11
   usepool: false
 
 
-#SQLite settings
+#SQLite 设置
 SQLite:
-  #Address is the folder path
+  #路径为文件夹地址
   path: Default
 
 
-#MySQL settings
+#MySQL 设置
 MySQL:
   host: localhost
   port: 3306
   user: root
   pass: root
   database: data
-  #auto add "_", can use %sign% to indicate Server ID (BungeeCord settings)
+  #自动添加 "_"，可使用 %sign% 表示服务器 ID（SyncData 设置）
   table-suffix: ''
   property:
     usessl: false
@@ -30,7 +30,7 @@ MySQL:
     allowPublicKeyRetrieval: false
 
 
-#Connection pool settings
+#连接池设置
 Pool-Settings:
   maximum-pool-size: 10
   minimum-idle: 10
@@ -38,7 +38,7 @@ Pool-Settings:
   idle-timeout: 60000
 
 
-#Redis settings
+#Redis 设置
 Redis:
   host: localhost
   port: 6379

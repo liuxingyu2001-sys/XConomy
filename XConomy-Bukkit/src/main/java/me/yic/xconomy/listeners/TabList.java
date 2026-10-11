@@ -18,10 +18,13 @@
  */
 package me.yic.xconomy.listeners;
 
+import me.yic.xconomy.utils.CrossServerTips;
 import me.yic.xconomy.utils.TabListCon;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +35,32 @@ import java.util.List;
 
 public class TabList implements TabCompleter {
 
+
+    /**
+     * 合并跨服在线玩家名，用于指令的 TAB 补全：
+     * 1. XConomy 自身的跨服在线名单（开启 SyncData(Redis) 时）；
+     * 2. 本服在线玩家；
+     * 3. LiuChat 提供的全网络在线玩家名单。
+     */
+    private static List<String> playerNames() {
+        List<String> names = new ArrayList<>();
+        for (String name : TabListCon.get_Tab_PlayerList()) {
+            if (name != null && !names.contains(name)) {
+                names.add(name);
+            }
+        }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!names.contains(player.getName())) {
+                names.add(player.getName());
+            }
+        }
+        for (String name : CrossServerTips.knownPlayers()) {
+            if (name != null && !names.contains(name)) {
+                names.add(name);
+            }
+        }
+        return names;
+    }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String commandName, @NotNull String[] args) {
@@ -48,6 +77,8 @@ public class TabList implements TabCompleter {
                         COMMANDS_xc.add("deldata");
                     }
                     StringUtil.copyPartialMatches(args[0], COMMANDS_xc, completions);
+                } else if (args.length == 2 && args[0].equalsIgnoreCase("deldata") && commandSender.isOp()) {
+                    StringUtil.copyPartialMatches(args[1], playerNames(), completions);
                 }
                 Collections.sort(completions);
                 break;
@@ -62,7 +93,7 @@ public class TabList implements TabCompleter {
                         StringUtil.copyPartialMatches(args[0], COMMANDS_payperm, completions);
                     } else if (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("remove")) {
                         if (args.length == 2) {
-                            StringUtil.copyPartialMatches(args[1], TabListCon.get_Tab_PlayerList(), completions);
+                            StringUtil.copyPartialMatches(args[1], playerNames(), completions);
                         } else if (args.length == 3 && args[0].equalsIgnoreCase("set")) {
                             COMMANDS_payperm.add("true");
                             COMMANDS_payperm.add("false");
@@ -76,7 +107,7 @@ public class TabList implements TabCompleter {
             case "paytoggle":{
                 if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.paytoggle")) {
                     if (args.length == 1) {
-                        StringUtil.copyPartialMatches(args[0], TabListCon.get_Tab_PlayerList(), completions);
+                        StringUtil.copyPartialMatches(args[0], playerNames(), completions);
                     }
                 }
                 Collections.sort(completions);
@@ -86,13 +117,16 @@ public class TabList implements TabCompleter {
             case "balancetop": {
                 if (args.length == 1) {
                     List<String> COMMANDS_baltop = new ArrayList<>();
-                    if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.balancetop")) {
+                    if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.balancetop")
+                            || commandSender.hasPermission("xconomy.user.balancetop.hide")) {
                         COMMANDS_baltop.add("hide");
                         COMMANDS_baltop.add("display");
                     }
                     StringUtil.copyPartialMatches(args[0], COMMANDS_baltop, completions);
                 } else if (args.length == 2) {
-                    StringUtil.copyPartialMatches(args[1], TabListCon.get_Tab_PlayerList(), completions);
+                    if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.balancetop")) {
+                        StringUtil.copyPartialMatches(args[1], playerNames(), completions);
+                    }
                 }
                 Collections.sort(completions);
                 break;
@@ -100,7 +134,7 @@ public class TabList implements TabCompleter {
             case "pay": {
                 if (args.length == 1) {
                     if (commandSender.isOp() || commandSender.hasPermission("xconomy.user.pay")) {
-                        StringUtil.copyPartialMatches(args[0], TabListCon.get_Tab_PlayerList(), completions);
+                        StringUtil.copyPartialMatches(args[0], playerNames(), completions);
                     }
                 }
                 Collections.sort(completions);
@@ -114,7 +148,7 @@ public class TabList implements TabCompleter {
                 if (args.length == 1) {
                     List<String> COMMANDS_balance = new ArrayList<>();
                     if (commandSender.isOp() || commandSender.hasPermission("xconomy.user.balance.other")) {
-                        COMMANDS_balance.addAll(TabListCon.get_Tab_PlayerList());
+                        COMMANDS_balance.addAll(playerNames());
                     }
                     if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.give")) {
                         COMMANDS_balance.add("give");
@@ -132,7 +166,7 @@ public class TabList implements TabCompleter {
                         if (commandSender.isOp() || commandSender.hasPermission("xconomy.user.balance.other")
                                 || commandSender.hasPermission("xconomy.admin.give") || commandSender.hasPermission("xconomy.admin.take")
                                 || commandSender.hasPermission("xconomy.admin.set")) {
-                            StringUtil.copyPartialMatches(args[1], TabListCon.get_Tab_PlayerList(), completions);
+                            StringUtil.copyPartialMatches(args[1], playerNames(), completions);
                         }
                     }
                 } else if (args.length == 3) {

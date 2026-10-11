@@ -22,7 +22,6 @@ package me.yic.xconomy.info;
 public enum SyncChannalType {
 
     OFF("Off"),
-    BUNGEECORD("BungeeCord"),
     REDIS("Redis");
 
     final String value;

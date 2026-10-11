@@ -18,7 +18,6 @@
  */
 package me.yic.xconomy.depend.economy;
 
-import me.yic.xconomy.AdapterManager;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
@@ -116,11 +115,6 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(String name, double amount) {
-        if (AdapterManager.BanModiftyBalance()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "[BungeeCord] No player in server");
-        }
-
         double bal = getBalance(name);
         BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
@@ -144,11 +138,6 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer pp, double amount) {
-        if (AdapterManager.BanModiftyBalance()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "[BungeeCord] No player in server");
-        }
-
         if (DataCon.getPlayerData(pp.getUniqueId()) == null) {
             if (!createPlayerAccount(pp)) {
                 return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");
@@ -304,11 +293,6 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(String name, double amount) {
-        if (AdapterManager.BanModiftyBalance()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "[BungeeCord] No player in server");
-        }
-
         double bal = getBalance(name);
         BigDecimal amountFormatted = DataFormat.formatdouble(amount);
 
@@ -332,11 +316,6 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer pp, double amount) {
-        if (AdapterManager.BanModiftyBalance()) {
-            return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE,
-                    "[BungeeCord] No player in server");
-        }
-
         if (DataCon.getPlayerData(pp.getUniqueId()) == null) {
             if (!createPlayerAccount(pp)) {
                 return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.FAILURE, "No Account!");

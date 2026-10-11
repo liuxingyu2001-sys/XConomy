@@ -1,126 +1,144 @@
-#Default Online Offline SemiOnline
-#Default mode will automatically detect the player's UUID(support GeyserMC)
-#Online mode is better for servers that enable online-mode(support Yggdrasil)
-#Offline mode does not support ignoring username case
-#If you use floodgate(GeyserMC) and the option 'username-prefix' is set to empty, Please use SemiOnline mode
+#UUID 模式：Default Online Offline SemiOnline
+#Default 模式会自动识别玩家 UUID（支持 GeyserMC）
+#Online 模式适用于开启正版验证的服务器（支持 Yggdrasil）
+#Offline 模式不支持忽略用户名大小写
+#如果使用 floodgate(GeyserMC) 且 username-prefix 留空，请使用 SemiOnline 模式
 UUID-mode: Default
-#In convertion mode, can use command '/xconomy' import data from other plugins based on Vault
-#Conflicting data will be skipped, The imported data will be saved in XConomy/importdata/data.yml
-#In this mode, XConomy will not start normally
-#After the conversion, please check data and turn off this mode
-#Sponge version does not have this function
+#数据转换模式下，可使用 /xconomy 从其他基于 Vault 的插件导入数据
+#冲突的数据将被跳过，导入的数据将保存在 XConomy/importdata/data.yml 中
+#该模式下 XConomy 不会正常启动
+#转换完成后请检查数据并关闭该模式
 Importdata-mode: false
 
 
-#Settings
+#设置
 Settings:
-  #Chinese ChineseTW English French Spanish Russian Turkish Japanese German
+  #可选：Chinese ChineseTW English French Spanish Russian Turkish Japanese German
   #Indonesia Portuguese Italian
-  language: English
-  #Whether to check for new version
+  language: Chinese
+  #是否检查新版本
   check-update: true
-  #TOP10 and the Server Total refresh time interval (Seconds)
+  #TOP10 与服务器总余额的刷新间隔（秒）
   refresh-time: 300
-  #If set to true, XConomy will register the following commands:
+  #设为 true 时，XConomy 会注册以下指令：
     # - economy
     # - eco
     # - ebalancetop
     # - ebaltop
     # - eeconomy
-  #Please keep in mind that if Essentials is installed on your server
-  #XConomy will take over these commands.
+  #请注意：如果服务器安装了 Essentials
+  #XConomy 会接管以上指令。
   eco-command: true
-  #XConomy will disable the economic function of Essentials.
-  #Just the economic function.
+  #XConomy 将禁用 Essentials 的经济功能。
+  #仅禁用经济功能。
   disable-essentials: true
-  #Initial balance
+  #初始余额
   initial-bal: 0
-  #Tax to be paid for pay command (0.5 means 50%, 1 means 100%)
+  #pay 指令收取的手续费（0.5 表示 50%，1 表示 100%）
   payment-tax: 0
-  #Ranking size (Max value 100)
+  #排行榜显示数量（最大 100）
   ranking-size: 10
-  #Rows per page of list (Ranking and help menu)
+  #每页显示的行数（排行榜与帮助菜单）
   lines-per-page: 5
-  #If you need to modify the data in the database directly, it is recommended to enable it
-  #Asynchronous saving of data is not supported after caching is disabled
-  #Disabling caching will increase the pressure on the database
+  #如需直接修改数据库中的数据，建议开启
+  #关闭缓存后不支持异步保存数据
+  #关闭缓存会增加数据库压力
   disable-cache: false
-  #Dose save transaction record
-  #Only MySQL is supported
+  #是否保存交易记录
+  #仅支持 MySQL
   transaction-record: true
-  #Record transaction information of pay command while player offline.
-  #The player will receive tips when they reconnect.
-  #Transaction-record function must be enabled.
+  #记录玩家离线期间的 pay 交易信息
+  #玩家重新登录时会收到提示
+  #需先开启 transaction-record
   offline-pay-transfer-tips: false
-  #Ignore the case of player names
+  #忽略玩家名大小写
   username-ignore-case: false
+  #拥有权限 'xconomy.admin.hidden' 的玩家会从 baltop 中隐藏
+  #（同时也会从 TAB 列表中隐藏，该行为始终生效）
+  hidden-in-baltop: false
 
 
-#It can solve the problem that some plugins need to create non-player accounts, such as Factions
+#可解决部分插件需要创建非玩家账户的问题，例如 Factions
 #==========================================================================================
-#Plugins supported by default (no requirement to enable non-player-account)
+#默认支持的插件（无需开启非玩家账户）
 #Towny
 #==========================================================================================
-#Non-player account data is not synced with BC
+#非玩家账户数据不与 BC 同步
 non-player-account:
-  #Whether to enable non-player accounts.
+  #是否启用非玩家账户
   enable: false
-  #If the account name contains fields in the whitelist, it will be recognized as non-player accounts.
-  #Otherwise, it is recognized as a player account
-  #If the player's name contains fields in the whitelist, it will be denied access to the server.
-  #This function can reduce the times that reading data from the database.
+  #若账户名包含白名单中的字段，则识别为非玩家账户
+  #否则识别为玩家账户
+  #若玩家名包含白名单中的字段，将拒绝其进入服务器
+  #该功能可减少从数据库读取数据的次数
   whitelist:
-    #Whether to enable whitelist.
+    #是否启用白名单
     enable: false
     fields-list:
       - tax
       - nation-
 
 
-#The display of the currency
+#货币显示
 Currency:
   singular-name: dollar
   plural-name: dollars
-  #Is the balance an integer
+  #余额是否为整数
   integer-bal: false
-  #Method for rounding off excess digits in the amount
-  #0 indicates rounding down, 1 indicates rounding up
+  #多余小数位的取整方式
+  #0 表示向下取整，1 表示向上取整
   rounding-mode: 0
   thousands-separator: ','
-  #%format_balance% indicate the balance after the format
+  #%format_balance% 表示格式化后的余额
   display-format: '%balance% %currencyname%'
-  #Maximum amount (default is maximum)
+  #最大金额（默认最大）
   max-number: '10000000000000000'
   format-balance:
     1000: k
     1000000: m
 
 
-#SyncData settings
+#SyncData 设置（跨服同步 / 跨服转账提示）
+#使用 Redis 作为跨服通道，无需在 Velocity / BungeeCord 代理端安装插件
+#离线转账提示依赖 MySQL 的交易记录功能
 SyncData:
-  #Whether to enable data synchronization between multiple servers
+  #是否开启多服务器之间的数据同步
   enable: false
-  #BungeeCord Redis
-  #================================================== BungeeCord Channel ==================================================
-  #After BungeeCord sync is turned on, the console and other plugins will not be able to modify the balance in the server without player
-  #Please Set bungeecord to true in the spigot.yml
-  #==================================================   Redis  Channel   ==================================================
-  #Require 'slf4j' dependencies
-  channel-type: BungeeCord
-  #Server ID, keep the ID and the MySQL settings is the same between the servers requiring synchronization
+  #跨服通道，目前仅支持 Redis
+  #需要 'slf4j' 依赖
+  #可与 LiuChat 共用同一 Redis，XConomy 使用 db-index 指定的库与独立频道，互不冲突
+  channel-type: Redis
+  #服务器 ID，需要同步的服务器之间保持 ID 和 MySQL 设置一致
   sign: aa
 
 
-#Thread settings
+#LiuChat 集成（跨服转账提示的兜底方案）
+#需要每个子服都安装 LiuChat，并开启其跨服功能
+#注意：开启上方 SyncData(Redis) 后，会优先使用 XConomy 内置的私密跨服提示，
+#      此时本功能不会重复发送
+LiuChat:
+  #当收款玩家不在本服时，通过 LiuChat 跨服公告转发转账提示
+  #（所有服务器均可见）
+  #设为 false 可关闭
+  cross-server-pay-tips: true
+  #仅在收款玩家确实在线于其他服务器时才发送
+  #（依赖 LiuChat 的在线列表；读取不到列表时仍会发送）
+  tip-only-online: true
+  #提示格式，支持 & 颜色代码
+  #占位符：%player% 付款人，%target% 收款人，%amount% 转账金额
+  pay-tip-format: '&8[&b跨服转账&8] &f%player% &7给 &f%target% &7转账了 &a%amount%'
+
+
+#线程设置
 Thread:
-  #Set the timeout period for CompletableFuture
-  #The unit is seconds
+  #设置 CompletableFuture 的超时时间
+  #单位为秒
   future-timeout: 3
 
 
-#Region-Thread settings(Only effective for Folia server)
+#区域线程设置（仅对 Folia 服务器有效）
 Region-Thread:
-  #When executing synchronized threads, a coordinate will be randomly selected within the specified range below to perform.
+  #执行同步线程时，会在下方指定范围内随机选取一个坐标执行
   world: world
   range-x: 1024
   range-y: 1024

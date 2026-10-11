@@ -44,6 +44,17 @@ public class UpdateConfig {
             config.set("Thread.future-timeout", 3);
             update = true;
         }
+        if (!config.contains("Settings.hidden-in-baltop")) {
+            config.set("Settings.hidden-in-baltop", false);
+            update = true;
+        }
+        if (!config.contains("LiuChat")) {
+            config.createSection("LiuChat");
+            config.set("LiuChat.cross-server-pay-tips", true);
+            config.set("LiuChat.tip-only-online", true);
+            config.set("LiuChat.pay-tip-format", "&8[&b跨服转账&8] &f%player% &7给 &f%target% &7转账了 &a%amount%");
+            update = true;
+        }
         if (update){
             try {
                 config.save();

@@ -9,10 +9,7 @@ import me.yic.xconomy.utils.UUIDMode;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import java.io.ByteArrayOutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -79,44 +76,5 @@ public class CPlugin implements iPlugin {
     @Override
     public void runTaskLaterAsynchronously(Runnable runnable, long time) {
         Bukkit.getAsyncScheduler().runDelayed(XConomy.getInstance(), scheduledTask -> runnable.run(), time, TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public void sendPluginMessage(String channel, ByteArrayOutputStream stream){
-        Bukkit.getOnlinePlayers().iterator().next().sendPluginMessage(XConomy.getInstance(), channel, stream.toByteArray());
-    }
-
-    @Override
-    public void registerIncomingPluginChannel(String channel, String classname) {
-        try {
-            Class<?> clazz = Class.forName(classname);
-            Object ob = clazz.getDeclaredConstructor().newInstance();
-            Bukkit.getServer().getMessenger().registerIncomingPluginChannel(XConomy.getInstance(), channel, (PluginMessageListener) ob);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void registerOutgoingPluginChannel(String channel) {
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(XConomy.getInstance(), channel);
-    }
-
-    @Override
-    public void unregisterIncomingPluginChannel(String channel, String classname) {
-        try {
-            Class<?> clazz = Class.forName(classname);
-            Object ob = clazz.getDeclaredConstructor().newInstance();
-            Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(XConomy.getInstance(), channel, (PluginMessageListener) ob);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void unregisterOutgoingPluginChannel(String channel) {
-        Bukkit.getServer().getMessenger().unregisterOutgoingPluginChannel(XConomy.getInstance(), channel);
     }
 }

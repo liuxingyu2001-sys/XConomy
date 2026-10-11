@@ -30,6 +30,7 @@ import me.yic.xconomy.info.MessageConfig;
 import me.yic.xconomy.info.PermissionINFO;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.task.ReceivePerCheck;
+import me.yic.xconomy.utils.CrossServerTips;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -140,12 +141,34 @@ public class CommandPay extends CommandCore{
                 .replace("%amount%", amountFormatted);
 
         if (!target.isOnline()) {
+            // 已开启 SyncData(Redis) 时，通过内置 Redis 通道向目标服务器投递私密提示
             broadcastSendMessage(false, pd, mess);
+            // 未开启时退回使用 LiuChat 跨服公告
+            sendCrossServerPayTip(sender, realname, amountFormatted);
             return true;
         }
 
         target.sendMessage(mess);
         return true;
+    }
+
+    /**
+     * 当收款玩家位于其他服务器时，通过 LiuChat 转发转账提示。
+     * 未安装 LiuChat 时该桥接为空操作。
+     * 若已开启 SyncData(Redis)，则由内置 Redis 通道负责，避免重复提示。
+     */
+    private static void sendCrossServerPayTip(CSender sender, String targetName, String amountFormatted) {
+        if (XConomyLoad.getSyncData_Enable()) {
+            return;
+        }
+        if (!XConomyLoad.Config.LIUCHAT_CROSS_SERVER_PAY_TIPS || !CrossServerTips.available()) {
+            return;
+        }
+        String tip = XConomyLoad.Config.LIUCHAT_PAY_TIP_FORMAT
+                .replace("%player%", sender.getName())
+                .replace("%target%", targetName)
+                .replace("%amount%", amountFormatted);
+        CrossServerTips.broadcast(sender.toPlayer().getUniqueId(), targetName, tip);
     }
 
 }

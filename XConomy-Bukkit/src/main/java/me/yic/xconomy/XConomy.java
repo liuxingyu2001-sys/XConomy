@@ -21,6 +21,7 @@ package me.yic.xconomy;
 import me.yic.xconomy.adapter.comp.CConfig;
 import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.ImportData;
+import me.yic.xconomy.depend.LiuChatTipSender;
 import me.yic.xconomy.depend.LoadEconomy;
 import me.yic.xconomy.depend.NonPlayerPlugin;
 import me.yic.xconomy.depend.Placeholder;
@@ -31,6 +32,7 @@ import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.TabList;
 import me.yic.xconomy.task.RunBaltop;
 import me.yic.xconomy.task.Updater;
+import me.yic.xconomy.utils.CrossServerTips;
 import me.yic.xconomy.utils.EconomyCommand;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -61,6 +63,9 @@ public class XConomy extends JavaPlugin {
     public void onEnable() {
         instance = this;
         PVersion = getInstance().getDescription().getVersion();
+
+        // 通过 LiuChat 转发跨服转账提示（未安装 LiuChat 时为空操作）
+        CrossServerTips.register(new LiuChatTipSender());
 
         load();
 
