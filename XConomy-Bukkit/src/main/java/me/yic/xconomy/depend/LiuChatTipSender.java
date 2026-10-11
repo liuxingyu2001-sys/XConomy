@@ -46,12 +46,15 @@ import java.util.UUID;
 public class LiuChatTipSender implements CrossServerTips.Sender {
 
     private Plugin liuchat;
+    /** LiuChat 的广播公告 API（旧版本回退用）。 */
     private Method broadcastAnnouncement;
+    /** LiuChat 的私密投递 API（优先使用，只发给目标玩家）。 */
+    private Method deliverPrivate;
     private Object crossServer;
     private Method knownPlayerNames;
 
     private void init() {
-        if (liuchat != null && broadcastAnnouncement != null) {
+        if (liuchat != null) {
             return;
         }
         try {
@@ -59,9 +62,10 @@ public class LiuChatTipSender implements CrossServerTips.Sender {
             if (plugin == null || !plugin.isEnabled()) {
                 return;
             }
-            broadcastAnnouncement = plugin.getClass().getMethod(
-                    "broadcastAnnouncement", Player.class, BaseComponent[].class);
             liuchat = plugin;
+            // 优先使用私密投递；旧版 LiuChat 没有该方法时退回广播公告
+            deliverPrivate = findMethod(plugin, "deliverPrivate", Player.class, String.class, BaseComponent[].class);
+            broadcastAnnouncement = findMethod(plugin, "broadcastAnnouncement", Player.class, BaseComponent[].class);
             // 可选：LiuChat 的跨服在线列表，用于跳过离线玩家
             try {
                 Field field = plugin.getClass().getDeclaredField("crossServer");
@@ -77,13 +81,23 @@ public class LiuChatTipSender implements CrossServerTips.Sender {
         } catch (Throwable ignored) {
             liuchat = null;
             broadcastAnnouncement = null;
+            deliverPrivate = null;
+        }
+    }
+
+    /** 反射查找公开方法，不存在时返回 null（旧版兼容）。 */
+    private static Method findMethod(Plugin plugin, String name, Class<?>... types) {
+        try {
+            return plugin.getClass().getMethod(name, types);
+        } catch (Throwable ignored) {
+            return null;
         }
     }
 
     @Override
     public boolean broadcast(UUID carrier, String targetName, String message) {
         init();
-        if (liuchat == null || broadcastAnnouncement == null) {
+        if (liuchat == null || (deliverPrivate == null && broadcastAnnouncement == null)) {
             return false;
         }
         Player player = carrier == null ? null : Bukkit.getPlayer(carrier);
@@ -94,20 +108,24 @@ public class LiuChatTipSender implements CrossServerTips.Sender {
             return false;
         }
         if (Bukkit.isPrimaryThread()) {
-            send(player, message);
+            send(player, targetName, message);
         } else {
-            Bukkit.getScheduler().runTask(XConomy.getInstance(), () -> send(player, message));
+            Bukkit.getScheduler().runTask(XConomy.getInstance(), () -> send(player, targetName, message));
         }
         return true;
     }
 
-    private void send(Player carrier, String message) {
+    private void send(Player carrier, String targetName, String message) {
         try {
             if (!carrier.isOnline()) {
                 return;
             }
             BaseComponent[] components = TextComponent.fromLegacyText(message);
-            broadcastAnnouncement.invoke(liuchat, carrier, (Object) components);
+            if (deliverPrivate != null) {
+                deliverPrivate.invoke(liuchat, carrier, targetName, (Object) components);
+            } else {
+                broadcastAnnouncement.invoke(liuchat, carrier, (Object) components);
+            }
         } catch (Throwable ignored) {
             // 聊天插件异常不能影响已完成的交易
         }

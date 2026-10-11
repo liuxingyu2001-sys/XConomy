@@ -112,13 +112,12 @@ SyncData:
   sign: aa
 
 
-#LiuChat 集成（跨服转账提示的兜底方案）
+#LiuChat 集成（跨服转账提示的优先方案）
 #需要每个子服都安装 LiuChat，并开启其跨服功能
-#注意：开启上方 SyncData(Redis) 后，会优先使用 XConomy 内置的私密跨服提示，
-#      此时本功能不会重复发送
+#LiuChat 可用时优先使用其私密投递，只把提示发给收款玩家；
+#不可用时自动退回上方 SyncData(Redis) 内置跨服通道
 LiuChat:
-  #当收款玩家不在本服时，通过 LiuChat 跨服公告转发转账提示
-  #（所有服务器均可见）
+  #当收款玩家不在本服时，通过 LiuChat 私密投递把转账提示直达收款玩家
   #设为 false 可关闭
   cross-server-pay-tips: true
   #仅在收款玩家确实在线于其他服务器时才发送
@@ -126,7 +125,7 @@ LiuChat:
   tip-only-online: true
   #提示格式，支持 & 颜色代码
   #占位符：%player% 付款人，%target% 收款人，%amount% 转账金额
-  pay-tip-format: '&8[&b跨服转账&8] &f%player% &7给 &f%target% &7转账了 &a%amount%'
+  pay-tip-format: '&8[&b跨服转账&8] &f%player% &7向你转账了 &a%amount%'
 
 
 #线程设置

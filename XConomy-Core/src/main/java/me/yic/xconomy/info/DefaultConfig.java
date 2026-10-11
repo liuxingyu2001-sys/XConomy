@@ -60,7 +60,7 @@ public class DefaultConfig {
 
     // LiuChat 跨服转账提示
     public boolean LIUCHAT_CROSS_SERVER_PAY_TIPS = false;
-    public String LIUCHAT_PAY_TIP_FORMAT = "&8[&b跨服转账&8] &f%player% &7给 &f%target% &7转账了 &a%amount%";
+    public String LIUCHAT_PAY_TIP_FORMAT = "&8[&b跨服转账&8] &f%player% &7向你转账了 &a%amount%";
     public boolean LIUCHAT_TIP_ONLY_ONLINE = true;
 
     public boolean NON_PLAYER_ACCOUNT = config.getBoolean("non-player-account.enable");

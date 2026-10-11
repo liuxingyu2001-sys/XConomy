@@ -12,8 +12,8 @@
 - MySQL 交易记录，支持玩家离线期间的转账提示
 - Redis 跨服数据同步（无需在代理端安装插件）
 - 跨服转账提示：
-  - 开启 `SyncData`(Redis) 时，使用内置 Redis 通道向目标服务器投递私密提示
-  - 未开启同步时，使用 LiuChat 跨服公告兜底
+  - 优先使用 LiuChat 私密投递，只发给收款玩家（需各子服安装 LiuChat）
+  - LiuChat 不可用时，回退内置 Redis 通道
 - `/baltop hide|display` 隐藏 / 显示排行数据（玩家自助 + 管理员指定）
 - 指令玩家名 TAB 补全支持跨服在线玩家
 
