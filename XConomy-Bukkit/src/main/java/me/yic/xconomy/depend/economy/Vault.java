@@ -29,39 +29,41 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.OfflinePlayer;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class Vault extends AbstractEconomy {
 
+    private static final String BANK_NOT_SUPPORTED = "XConomy does not support banks";
+
+    private static EconomyResponse bankNotSupported() {
+        return new EconomyResponse(0.0D, 0.0D, EconomyResponse.ResponseType.NOT_IMPLEMENTED, BANK_NOT_SUPPORTED);
+    }
+
     @Override
     public EconomyResponse bankBalance(String arg0) {
-        // TODO Auto-generated method stub
-        return null;
+        return bankNotSupported();
     }
 
     @Override
     public EconomyResponse bankDeposit(String arg0, double arg1) {
-        // TODO Auto-generated method stub
-        return null;
+        return bankNotSupported();
     }
 
     @Override
     public EconomyResponse bankHas(String arg0, double arg1) {
-        // TODO Auto-generated method stub
-        return null;
+        return bankNotSupported();
     }
 
     @Override
     public EconomyResponse bankWithdraw(String arg0, double arg1) {
-        // TODO Auto-generated method stub
-        return null;
+        return bankNotSupported();
     }
 
     @Override
     public EconomyResponse createBank(String arg0, String arg1) {
-        // TODO Auto-generated method stub
-        return null;
+        return bankNotSupported();
     }
 
     @Override
@@ -109,8 +111,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse deleteBank(String arg0) {
-        // TODO Auto-generated method stub
-        return null;
+        return bankNotSupported();
     }
 
     @Override
@@ -215,8 +216,7 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public List<String> getBanks() {
-        // TODO Auto-generated method stub
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
@@ -276,14 +276,12 @@ public class Vault extends AbstractEconomy {
 
     @Override
     public EconomyResponse isBankMember(String arg0, String arg1) {
-        // TODO Auto-generated method stub
-        return null;
+        return bankNotSupported();
     }
 
     @Override
     public EconomyResponse isBankOwner(String arg0, String arg1) {
-        // TODO Auto-generated method stub
-        return null;
+        return bankNotSupported();
     }
 
     @Override
