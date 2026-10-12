@@ -21,6 +21,7 @@ package me.yic.xconomy.depend;
 import me.yic.xconomy.XConomy;
 import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.utils.CrossServerTips;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -120,7 +121,9 @@ public class LiuChatTipSender implements CrossServerTips.Sender {
             if (!carrier.isOnline()) {
                 return;
             }
-            BaseComponent[] components = TextComponent.fromLegacyText(message);
+            // 配置里的格式使用 & 颜色代码，而 TextComponent.fromLegacyText 只识别 §，需先转换
+            BaseComponent[] components = TextComponent.fromLegacyText(
+                    ChatColor.translateAlternateColorCodes('&', message));
             if (deliverPrivate != null) {
                 deliverPrivate.invoke(liuchat, carrier, targetName, (Object) components);
             } else {

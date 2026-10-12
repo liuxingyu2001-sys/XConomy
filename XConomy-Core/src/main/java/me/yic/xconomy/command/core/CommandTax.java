@@ -29,11 +29,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * {@code /xconomy tax ...} 财富税管理指令（仅 OP）。
+ * 财富税管理指令（仅 OP）。
  * <ul>
- *   <li>{@code run}：立即结算（跳过时间与生效日期判断）</li>
+ *   <li>{@code run}：立即结算（忽略是否开启、时间与生效日期，但校验执行服）</li>
  *   <li>{@code status}：查看今日结算状态</li>
  * </ul>
+ * 可通过 {@code /xconomy tax <run|status>} 或 {@code /wealthtax <run|status>} 调用。
  */
 public class CommandTax {
 
@@ -42,11 +43,11 @@ public class CommandTax {
             send(sender, m("no_permission", "&c你没有权限使用该指令。"));
             return true;
         }
-        if (args.length < 2) {
-            send(sender, m("tax_usage", "&7用法：/xconomy tax <run|status>"));
+        if (args.length < 1) {
+            send(sender, m("tax_usage", "&7用法：/wealthtax <run|status>"));
             return true;
         }
-        String sub = args[1].toLowerCase();
+        String sub = args[0].toLowerCase();
         switch (sub) {
             case "run":
             case "now": {
@@ -69,7 +70,7 @@ public class CommandTax {
                 return true;
             }
             default:
-                send(sender, m("tax_usage", "&7用法：/xconomy tax <run|status>"));
+                send(sender, m("tax_usage", "&7用法：/wealthtax <run|status>"));
                 return true;
         }
     }
@@ -81,7 +82,7 @@ public class CommandTax {
     private static String statusFallback(WealthTax.Status status) {
         switch (status) {
             case STARTED:
-                return "&a财富税结算已开始，稍后可用 /xconomy tax status 查看结果。";
+                return "&a财富税结算已开始，稍后可用 /wealthtax status 查看结果。";
             case DISABLED:
                 return "&c财富税未开启。";
             case NOT_YET:

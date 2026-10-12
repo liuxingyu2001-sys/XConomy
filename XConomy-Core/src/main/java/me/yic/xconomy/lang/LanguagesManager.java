@@ -107,6 +107,7 @@ public class LanguagesManager {
         ll.add("help12");
         ll.add("help13");
         ll.add("help14");
+        ll.add("help15");
         ll.add("tax_usage");
         ll.add("tax_started");
         ll.add("tax_disabled");

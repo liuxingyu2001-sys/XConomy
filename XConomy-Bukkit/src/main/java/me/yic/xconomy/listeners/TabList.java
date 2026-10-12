@@ -89,6 +89,18 @@ public class TabList implements TabCompleter {
                 Collections.sort(completions);
                 break;
             }
+
+            case "wealthtax":
+            case "wtax": {
+                if (args.length == 1 && commandSender.isOp()) {
+                    List<String> COMMANDS_tax = new ArrayList<>();
+                    COMMANDS_tax.add("run");
+                    COMMANDS_tax.add("status");
+                    StringUtil.copyPartialMatches(args[0], COMMANDS_tax, completions);
+                }
+                Collections.sort(completions);
+                break;
+            }
             case "paypermission":
             case "payperm": {
                 if (commandSender.isOp() || commandSender.hasPermission("xconomy.admin.permission")) {

@@ -55,8 +55,8 @@ help13: '&6paypermission set <player> True/False  -  Set <player>''s (* represen
 help14: '&6paypermission remove <player>  -  Setta al player desiderato il permesso di default'
 
 #财富税
-tax_usage: '&7Usage: /xconomy tax <run|status>'
-tax_started: '&aWealth tax settlement started; check /xconomy tax status later.'
+tax_usage: '&7Usage: /wealthtax <run|status>'
+tax_started: '&aWealth tax settlement started; check /wealthtax status later.'
 tax_disabled: '&cWealth tax is disabled.'
 tax_not_yet: '&eNot yet at settlement time or effective date.'
 tax_not_executor: '&eThis server is not the designated wealth tax executor.'
@@ -66,3 +66,4 @@ tax_error: '&cWealth tax error, check the console.'
 tax_status: '&7Date &f%date% &7| completed &f%completed% &7| players &f%count% &7| amount &f%amount%'
 tax_broadcast: '&6[WealthTax] &eTaxed &f%count% &eplayers for &f%amount% &etoday; the tax has been destroyed.'
 tax_broadcast_account: '&6[WealthTax] &eTaxed &f%count% &eplayers for &f%amount% &etoday.'
+help15: '&6wealthtax run/status &7- Run the wealth tax now / show settlement status'

@@ -36,6 +36,7 @@ import me.yic.xconomy.utils.UUIDMode;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -87,7 +88,7 @@ public class CommandCore {
                     return true;
                 }
                 if (args.length >= 1 && args[0].equalsIgnoreCase("tax")) {
-                    return CommandTax.onCommand(sender, args);
+                    return CommandTax.onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
                 }
                 showVersion(sender);
                 break;
@@ -95,6 +96,10 @@ public class CommandCore {
 
             case "paypermission": {
                 return CommandPayPermission.onCommand(sender, args);
+            }
+
+            case "wealthtax": {
+                return CommandTax.onCommand(sender, args);
             }
 
             case "paytoggle": {
@@ -238,6 +243,9 @@ public class CommandCore {
         if (sender.isOp() | sender.hasPermission("xconomy.admin.permission")) {
             helplist.add(translateColorCodes("help13"));
             helplist.add(translateColorCodes("help14"));
+        }
+        if (sender.isOp()) {
+            helplist.add(translateColorCodes("help15"));
         }
         Integer maxipages;
         if (helplist.size() % XConomyLoad.Config.LINES_PER_PAGE == 0) {

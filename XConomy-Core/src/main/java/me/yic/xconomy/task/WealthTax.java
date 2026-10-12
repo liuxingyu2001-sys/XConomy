@@ -80,7 +80,8 @@ public class WealthTax implements Runnable {
      *              逐人记录保证不会重复扣款。
      */
     public static Status execute(boolean force) {
-        if (!XConomyLoad.Config.WEALTH_TAX_ENABLE) {
+        // 自动调度必须开启才运行；管理员手动指令（force）可直接执行，便于测试/补跑
+        if (!force && !XConomyLoad.Config.WEALTH_TAX_ENABLE) {
             return Status.DISABLED;
         }
         try {

@@ -41,6 +41,10 @@ commands:
     usage: /<command>
     description: XConomy.
     aliases: [ payperm ]
+  wealthtax:
+    usage: /<command> [run|status]
+    description: 立即执行财富税 / 查看结算状态.
+    aliases: [ wtax ]
 
 permissions:
   xconomy.user.balance:
