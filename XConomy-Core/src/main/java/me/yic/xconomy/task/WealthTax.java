@@ -24,8 +24,10 @@ import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.data.DataCon;
 import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.DataLink;
 import me.yic.xconomy.data.caches.Cache;
 import me.yic.xconomy.data.sql.SQLWealthTax;
+import me.yic.xconomy.data.syncdata.PlayerData;
 import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.utils.ResidenceHook;
 
@@ -73,8 +75,9 @@ public class WealthTax implements Runnable {
     }
 
     /**
-     * @param force true = 管理员手动触发，跳过时间、生效日期、执行服与「今日已完成」判断，
-     *              但逐人记录仍然保证不会重复扣款。
+     * @param force true = 管理员手动触发，跳过时间、生效日期与「今日已完成」判断，
+     *              但仍校验执行服（防止在未装 Residence 的服漏算领地银行）；
+     *              逐人记录保证不会重复扣款。
      */
     public static Status execute(boolean force) {
         if (!XConomyLoad.Config.WEALTH_TAX_ENABLE) {
@@ -89,9 +92,12 @@ public class WealthTax implements Runnable {
                     refreshCacheOnce(today);
                     return Status.ALREADY_DONE;
                 }
-                if (!executorMatches()) {
-                    return Status.NOT_EXECUTOR;
-                }
+            }
+            // 无论是否手动触发，都要求由指定子服执行，避免在未装 Residence 的服漏算领地银行
+            if (!executorMatches()) {
+                return Status.NOT_EXECUTOR;
+            }
+            if (!force) {
                 if (!afterEffectiveDate(now.toLocalDate())) {
                     return Status.NOT_YET;
                 }
@@ -164,15 +170,19 @@ public class WealthTax implements Runnable {
                 if (!SQLWealthTax.recordIfAbsent(today, row.uuid, row.name, combined, tax)) {
                     continue;
                 }
+                BigDecimal actual = BigDecimal.ZERO;
                 try {
-                    BigDecimal actual = BigDecimal.ZERO;
-                    BigDecimal fromPersonal = row.balance.min(tax);
+                    // 以当前实际余额为准扣除，避免快照过期导致扣成负数
+                    PlayerData current = DataCon.getPlayerData(row.uuid);
+                    BigDecimal personal = current == null || current.getBalance() == null
+                            ? BigDecimal.ZERO : current.getBalance();
+                    BigDecimal fromPersonal = personal.min(tax);
                     if (fromPersonal.signum() > 0) {
                         DataCon.changeplayerdata("WEALTH_TAX", row.uuid, fromPersonal, false,
                                 "wealth-tax " + today, null);
                         actual = actual.add(fromPersonal);
                     }
-                    BigDecimal remaining = tax.subtract(fromPersonal);
+                    BigDecimal remaining = tax.subtract(actual);
                     if (remaining.signum() > 0 && ownerBanks != null) {
                         double taken = ResidenceHook.deduct(ownerBanks, remaining.doubleValue());
                         actual = actual.add(BigDecimal.valueOf(taken));
@@ -182,8 +192,10 @@ public class WealthTax implements Runnable {
                         collected = collected.add(actual);
                     }
                 } catch (Throwable t) {
-                    // 扣款失败：撤销记录以便后续重试
-                    SQLWealthTax.removeRecord(today, row.uuid);
+                    // 仅当完全未扣到款时才撤销记录，避免「部分扣款 + 重试」造成重复扣税
+                    if (actual.signum() == 0) {
+                        SQLWealthTax.removeRecord(today, row.uuid);
+                    }
                     XConomy.getInstance().logger(null, 1, "[财富税] 扣除失败 " + row.name + ": " + t.getMessage());
                 }
             }
@@ -194,8 +206,7 @@ public class WealthTax implements Runnable {
             if (!XConomyLoad.Config.WEALTH_TAX_DESTROY) {
                 String account = XConomyLoad.Config.WEALTH_TAX_ACCOUNT;
                 if (account != null && !account.trim().isEmpty() && collected.signum() > 0) {
-                    DataCon.changeaccountdata("WEALTH_TAX", account.trim(), collected, true,
-                            "wealth-tax " + today);
+                    depositToAccount(account.trim(), collected, today);
                 }
             }
 
@@ -221,6 +232,19 @@ public class WealthTax implements Runnable {
         if (!date.equals(appliedDate)) {
             Cache.clearCache();
             appliedDate = date;
+        }
+    }
+
+    /** 把税款存入非玩家账户；账户不存在时自动创建，失败只记录日志，不影响结算结果。 */
+    private static void depositToAccount(String account, BigDecimal amount, String today) {
+        try {
+            if (DataCon.getAccountBalance(account) == null) {
+                DataLink.newAccount(account);
+            }
+            DataCon.changeaccountdata("WEALTH_TAX", account, amount, true, "wealth-tax " + today);
+        } catch (Throwable t) {
+            XConomy.getInstance().logger(null, 1,
+                    "[财富税] 税款入账失败（税款已扣除但未入账）: " + account + " - " + t.getMessage());
         }
     }
 

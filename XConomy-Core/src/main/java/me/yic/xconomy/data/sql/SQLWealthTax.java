@@ -217,7 +217,7 @@ public class SQLWealthTax extends SQL {
             return;
         }
         try (PreparedStatement statement = connection.prepareStatement(
-                "update " + taxTable() + " set completed = 1, affected = ?, total_amount = ? where tax_date = ?")) {
+                "update " + taxTable() + " set completed = 1, affected = affected + ?, total_amount = total_amount + ? where tax_date = ?")) {
             statement.setInt(1, affected);
             statement.setDouble(2, total.doubleValue());
             statement.setString(3, date);

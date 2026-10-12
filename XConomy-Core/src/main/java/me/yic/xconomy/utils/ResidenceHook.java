@@ -72,7 +72,6 @@ public class ResidenceHook {
         }
     }
 
-    private static boolean initialized;
     private static boolean available;
     private static Method getInstance;
     private static Method getResidenceManager;
@@ -86,10 +85,10 @@ public class ResidenceHook {
     private static Method getResidenceName;
 
     private static synchronized boolean init() {
-        if (initialized) {
-            return available;
+        // 只在成功时缓存；若 Residence 晚于本插件加载，后续调用会重试
+        if (available) {
+            return true;
         }
-        initialized = true;
         try {
             Class<?> residenceClass = Class.forName("com.bekvon.bukkit.residence.Residence");
             Class<?> managerClass = Class.forName("com.bekvon.bukkit.residence.protection.ResidenceManager");
