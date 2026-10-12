@@ -53,7 +53,13 @@ public class CommandTax {
             case "run":
             case "now": {
                 WealthTax.Status status = WealthTax.execute(true);
-                send(sender, m(statusKey(status), statusFallback(status)));
+                if (status == WealthTax.Status.STARTED) {
+                    // 手动执行会清掉当日记录后完整重算（会再次扣款），单独提示
+                    send(sender, m("tax_started_force",
+                            "&a已清除今日结算记录并按当前配置重新结算（会再次扣款），稍后可用 /wealthtax status 查看结果。"));
+                } else {
+                    send(sender, m(statusKey(status), statusFallback(status)));
+                }
                 return true;
             }
             case "status":

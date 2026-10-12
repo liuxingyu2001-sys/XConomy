@@ -211,6 +211,30 @@ public class SQLWealthTax extends SQL {
         }
     }
 
+    /** 清除某日全部扣税记录与结算状态，供管理员「不跳过、重新完整结算」使用。 */
+    public static void resetDay(String date) {
+        Connection connection = database.getConnectionAndCheck();
+        if (connection == null) {
+            return;
+        }
+        try (PreparedStatement statement = connection.prepareStatement(
+                "delete from " + taxRecordTable() + " where tax_date = ?")) {
+            statement.setString(1, date);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (PreparedStatement statement = connection.prepareStatement(
+                "delete from " + taxTable() + " where tax_date = ?")) {
+            statement.setString(1, date);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            database.closeHikariConnection(connection);
+        }
+    }
+
     public static void finishDay(String date, int affected, BigDecimal total) {
         Connection connection = database.getConnectionAndCheck();
         if (connection == null) {

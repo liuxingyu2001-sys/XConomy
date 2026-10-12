@@ -92,6 +92,11 @@ public class WealthTax implements Runnable {
             LocalDateTime now = LocalDateTime.now();
             String today = now.toLocalDate().toString();
 
+            if (force) {
+                // 手动「直接执行」：先清除当日记录与结算状态，再按当前配置完整重算（会再次扣款）
+                SQLWealthTax.resetDay(today);
+            }
+
             if (!force) {
                 if (SQLWealthTax.isCompleted(today)) {
                     refreshCacheOnce(today);
