@@ -54,6 +54,7 @@
                                         <exclude>META-INF/*</exclude>
                                         <exclude>plugin.yml</exclude>
                                         <exclude>me/yic/xconomy/task/RunBaltop.class</exclude>
+                                        <exclude>me/yic/xconomy/task/RunWealthTax.class</exclude>
                                         <exclude>me/yic/xconomy/adapter/comp/CPlugin.class</exclude>
                                         <exclude>me/yic/xconomy/adapter/comp/CallAPI.class</exclude>
                                         <exclude>me/yic/xc_libs/pool2/**</exclude>

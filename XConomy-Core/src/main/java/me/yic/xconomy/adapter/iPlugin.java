@@ -21,6 +21,10 @@ public interface iPlugin {
     UUID NameToUUID(String name);
 
     boolean isSync();
+
+    /** 在主线程执行（Residence 等 Bukkit API 只能在主线程调用）。 */
+    void runTask(Runnable ra);
+
     void runTaskAsynchronously(Runnable ra);
 
     void runTaskLaterAsynchronously(Runnable ra, long time);

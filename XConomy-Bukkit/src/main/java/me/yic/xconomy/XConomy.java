@@ -31,6 +31,7 @@ import me.yic.xconomy.lang.MessagesManager;
 import me.yic.xconomy.listeners.ConnectionListeners;
 import me.yic.xconomy.listeners.TabList;
 import me.yic.xconomy.task.RunBaltop;
+import me.yic.xconomy.task.RunWealthTax;
 import me.yic.xconomy.task.Updater;
 import me.yic.xconomy.utils.CrossServerTips;
 import me.yic.xconomy.utils.EconomyCommand;
@@ -164,6 +165,7 @@ public class XConomy extends JavaPlugin {
         XConomyLoad.Initial();
 
         RunBaltop.runstart();
+        RunWealthTax.runstart();
         logger(null, 0, "===== YiC =====");
     }
 
@@ -184,6 +186,7 @@ public class XConomy extends JavaPlugin {
         }
 
         RunBaltop.stop();
+        RunWealthTax.stop();
         XConomyLoad.Unload();
         logger("XConomy已成功卸载", 0, null);
     }

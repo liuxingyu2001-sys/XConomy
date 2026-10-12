@@ -128,6 +128,38 @@ LiuChat:
   pay-tip-format: '&8[&b跨服转账&8] &f%player% &7向你转账了 &a%amount%'
 
 
+#财富税（每日对超额金币征税并销毁，回收通胀）
+#多台子服共用同一 MySQL 时，依赖数据库保证「每天只结算一次」
+WealthTax:
+  #是否开启财富税
+  enable: false
+  #本服唯一标识，用于下方 executor 指定由哪台子服结算
+  #留空表示不参与 executor 匹配
+  server-id: ''
+  #仅当本服 server-id 等于该值时才会执行结算；留空表示任意子服均可执行
+  #建议指定为装有 Residence 的子服（如 99），以便把领地银行一并计税
+  executor: ''
+  #生效日期（yyyy-MM-dd）。留空表示立即生效，可用于公告后的缓冲期
+  effective-date: ''
+  #每日结算时间（服务器本地时间，HH:mm）
+  time: '00:00'
+  #起征点：合并后的财富高于该值才征税
+  threshold: 50000000
+  #每日税率，0.005 = 0.5%
+  rate: 0.005
+  #计税方式：full = 对全部财富征税；excess = 仅对超出起征点的部分征税
+  basis: full
+  #是否把 Residence（领地）银行余额计入玩家财富
+  #需要服务端安装 Residence，二者兼任运行时自动生效
+  include-residence-bank: true
+  #结算后是否全服公告
+  broadcast: true
+  #税款去向：true = 直接销毁；false = 存入下方账户
+  destroy: true
+  #destroy 为 false 时，税收入账的账户名
+  account: ''
+
+
 #线程设置
 Thread:
   #设置 CompletableFuture 的超时时间

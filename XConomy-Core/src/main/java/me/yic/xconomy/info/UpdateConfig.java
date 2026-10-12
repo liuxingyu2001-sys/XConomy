@@ -25,6 +25,15 @@ import java.io.IOException;
 
 public class UpdateConfig {
 
+    /** 仅当键不存在时写入默认值。 */
+    private static boolean ensure(CConfig config, String path, Object def) {
+        if (!config.contains(path)) {
+            config.set(path, def);
+            return true;
+        }
+        return false;
+    }
+
     public static void update(CConfig config) {
         boolean update = false;
         if (!config.contains("SyncData")) {
@@ -55,6 +64,21 @@ public class UpdateConfig {
             config.set("LiuChat.pay-tip-format", "&8[&b跨服转账&8] &f%player% &7给 &f%target% &7转账了 &a%amount%");
             update = true;
         }
+        if (!config.contains("WealthTax")) {
+            config.createSection("WealthTax");
+        }
+        update = ensure(config, "WealthTax.enable", false) || update;
+        update = ensure(config, "WealthTax.server-id", "") || update;
+        update = ensure(config, "WealthTax.executor", "") || update;
+        update = ensure(config, "WealthTax.effective-date", "") || update;
+        update = ensure(config, "WealthTax.time", "00:00") || update;
+        update = ensure(config, "WealthTax.threshold", 50000000) || update;
+        update = ensure(config, "WealthTax.rate", 0.005) || update;
+        update = ensure(config, "WealthTax.basis", "full") || update;
+        update = ensure(config, "WealthTax.include-residence-bank", true) || update;
+        update = ensure(config, "WealthTax.broadcast", true) || update;
+        update = ensure(config, "WealthTax.destroy", true) || update;
+        update = ensure(config, "WealthTax.account", "") || update;
         if (update){
             try {
                 config.save();

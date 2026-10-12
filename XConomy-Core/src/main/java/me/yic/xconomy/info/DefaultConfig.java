@@ -63,6 +63,23 @@ public class DefaultConfig {
     public String LIUCHAT_PAY_TIP_FORMAT = "&8[&b跨服转账&8] &f%player% &7向你转账了 &a%amount%";
     public boolean LIUCHAT_TIP_ONLY_ONLINE = true;
 
+    // 财富税（每日对超额财富征税并销毁）
+    public boolean WEALTH_TAX_ENABLE = config.getBoolean("WealthTax.enable");
+    public String WEALTH_TAX_SERVER_ID = config.getString("WealthTax.server-id");
+    public String WEALTH_TAX_EXECUTOR = config.getString("WealthTax.executor");
+    public String WEALTH_TAX_EFFECTIVE = config.getString("WealthTax.effective-date");
+    public String WEALTH_TAX_TIME = config.getString("WealthTax.time");
+    public BigDecimal WEALTH_TAX_THRESHOLD = BigDecimal.valueOf(config.getDouble("WealthTax.threshold"));
+    public double WEALTH_TAX_RATE = config.getDouble("WealthTax.rate");
+    public boolean WEALTH_TAX_EXCESS = "excess".equalsIgnoreCase(String.valueOf(config.getString("WealthTax.basis")));
+    public boolean WEALTH_TAX_RESIDENCE = !config.contains("WealthTax.include-residence-bank")
+            || config.getBoolean("WealthTax.include-residence-bank");
+    public boolean WEALTH_TAX_BROADCAST = !config.contains("WealthTax.broadcast")
+            || config.getBoolean("WealthTax.broadcast");
+    public boolean WEALTH_TAX_DESTROY = !config.contains("WealthTax.destroy")
+            || config.getBoolean("WealthTax.destroy");
+    public String WEALTH_TAX_ACCOUNT = config.getString("WealthTax.account");
+
     public boolean NON_PLAYER_ACCOUNT = config.getBoolean("non-player-account.enable");
     public List<String> NON_PLAYER_ACCOUNT_SUBSTRING = null;
 

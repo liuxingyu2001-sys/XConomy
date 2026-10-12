@@ -86,6 +86,9 @@ public class CommandCore {
                     }
                     return true;
                 }
+                if (args.length >= 1 && args[0].equalsIgnoreCase("tax")) {
+                    return CommandTax.onCommand(sender, args);
+                }
                 showVersion(sender);
                 break;
             }

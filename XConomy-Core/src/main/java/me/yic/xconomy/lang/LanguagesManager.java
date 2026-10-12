@@ -107,6 +107,17 @@ public class LanguagesManager {
         ll.add("help12");
         ll.add("help13");
         ll.add("help14");
+        ll.add("tax_usage");
+        ll.add("tax_started");
+        ll.add("tax_disabled");
+        ll.add("tax_not_yet");
+        ll.add("tax_not_executor");
+        ll.add("tax_in_progress");
+        ll.add("tax_already_done");
+        ll.add("tax_error");
+        ll.add("tax_status");
+        ll.add("tax_broadcast");
+        ll.add("tax_broadcast_account");
         return ll;
 
     }

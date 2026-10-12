@@ -75,10 +75,16 @@ public class TabList implements TabCompleter {
                     if (commandSender.isOp()) {
                         COMMANDS_xc.add("reload");
                         COMMANDS_xc.add("deldata");
+                        COMMANDS_xc.add("tax");
                     }
                     StringUtil.copyPartialMatches(args[0], COMMANDS_xc, completions);
                 } else if (args.length == 2 && args[0].equalsIgnoreCase("deldata") && commandSender.isOp()) {
                     StringUtil.copyPartialMatches(args[1], playerNames(), completions);
+                } else if (args.length == 2 && args[0].equalsIgnoreCase("tax") && commandSender.isOp()) {
+                    List<String> COMMANDS_tax = new ArrayList<>();
+                    COMMANDS_tax.add("run");
+                    COMMANDS_tax.add("status");
+                    StringUtil.copyPartialMatches(args[1], COMMANDS_tax, completions);
                 }
                 Collections.sort(completions);
                 break;

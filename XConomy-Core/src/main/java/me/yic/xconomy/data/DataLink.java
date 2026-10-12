@@ -71,6 +71,8 @@ public class DataLink{
             SQL.createTable();
             SQLUpdateTable.updataTable();
             SQLUpdateTable.updataTable_record();
+            // 财富税状态表（无论是否开启财富税都先建好，启用后无需再等重启）
+            SQLWealthTax.ensureTables();
             XConomyLoad.DConfig.loggersysmess("连接正常");
         } else {
             XConomyLoad.DConfig.loggersysmess("连接异常");
