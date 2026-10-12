@@ -117,6 +117,12 @@ public class LanguagesManager {
         ll.add("tax_already_done");
         ll.add("tax_error");
         ll.add("tax_status");
+        ll.add("tax_status_config");
+        ll.add("tax_basis_full");
+        ll.add("tax_basis_excess");
+        ll.add("tax_yes");
+        ll.add("tax_no");
+        ll.add("tax_any");
         ll.add("tax_broadcast");
         ll.add("tax_broadcast_account");
         return ll;

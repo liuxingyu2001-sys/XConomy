@@ -18,6 +18,7 @@
  */
 package me.yic.xconomy.command.core;
 
+import me.yic.xconomy.XConomyLoad;
 import me.yic.xconomy.adapter.comp.CChat;
 import me.yic.xconomy.adapter.comp.CSender;
 import me.yic.xconomy.data.DataFormat;
@@ -57,6 +58,8 @@ public class CommandTax {
             }
             case "status":
             case "info": {
+                // 先从磁盘读一次，保证看到的是最新配置
+                XConomyLoad.reloadWealthTax();
                 String date = LocalDate.now().toString();
                 boolean completed = SQLWealthTax.isCompleted(date);
                 int count = SQLWealthTax.affected(date);
@@ -67,6 +70,16 @@ public class CommandTax {
                         "%completed%", completed ? "是" : "否",
                         "%count%", String.valueOf(count),
                         "%amount%", DataFormat.shown(total)));
+                String executor = XConomyLoad.Config.WEALTH_TAX_EXECUTOR;
+                send(sender, m("tax_status_config",
+                        "&7阈值 &f%threshold% &7｜ 税率 &f%rate% &7｜ 计税 &f%basis% &7｜ 含领地 &f%residence% &7｜ 执行服 &f%executor%",
+                        "%threshold%", DataFormat.shown(XConomyLoad.Config.WEALTH_TAX_THRESHOLD),
+                        "%rate%", String.valueOf(XConomyLoad.Config.WEALTH_TAX_RATE),
+                        "%basis%", t(XConomyLoad.Config.WEALTH_TAX_EXCESS ? "tax_basis_excess" : "tax_basis_full",
+                                XConomyLoad.Config.WEALTH_TAX_EXCESS ? "超额" : "全额"),
+                        "%residence%", t(XConomyLoad.Config.WEALTH_TAX_RESIDENCE ? "tax_yes" : "tax_no",
+                                XConomyLoad.Config.WEALTH_TAX_RESIDENCE ? "是" : "否"),
+                        "%executor%", executor == null || executor.trim().isEmpty() ? t("tax_any", "任意") : executor.trim()));
                 return true;
             }
             default:
@@ -108,6 +121,15 @@ public class CommandTax {
             raw = raw.replace(placeholders[i], placeholders[i + 1]);
         }
         return CommandCore.PREFIX + CChat.translateAlternateColorCodes('&', raw);
+    }
+
+    /** 读取语言项（不带前缀，用于占位符取值）。 */
+    private static String t(String key, String fallback) {
+        String raw = MessagesManager.messageFile == null ? null : MessagesManager.messageFile.getString(key);
+        if (raw == null) {
+            raw = fallback;
+        }
+        return CChat.translateAlternateColorCodes('&', raw);
     }
 
     private static void send(CSender sender, String message) {

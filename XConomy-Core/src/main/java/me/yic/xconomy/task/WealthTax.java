@@ -80,6 +80,10 @@ public class WealthTax implements Runnable {
      *              逐人记录保证不会重复扣款。
      */
     public static Status execute(boolean force) {
+        // 管理员手动执行前先从磁盘重读配置，改完 config.yml 无需重启即可生效
+        if (force) {
+            XConomyLoad.reloadWealthTax();
+        }
         // 自动调度必须开启才运行；管理员手动指令（force）可直接执行，便于测试/补跑
         if (!force && !XConomyLoad.Config.WEALTH_TAX_ENABLE) {
             return Status.DISABLED;
@@ -154,6 +158,10 @@ public class WealthTax implements Runnable {
 
             int count = 0;
             BigDecimal collected = BigDecimal.ZERO;
+            XConomy.getInstance().logger(null, 0, "[财富税] 参数：起征点 " + DataFormat.shown(threshold)
+                    + "，税率 " + rate + "，计税 " + (excess ? "超额部分" : "全部财富")
+                    + "，含领地银行 " + (XConomyLoad.Config.WEALTH_TAX_RESIDENCE && ResidenceHook.available())
+                    + "，候选 " + candidates.size() + " 人");
             for (SQLWealthTax.WealthRow row : candidates.values()) {
                 ResidenceHook.OwnerBanks ownerBanks = banks.get(row.uuid);
                 BigDecimal bankTotal = ownerBanks == null
@@ -220,8 +228,15 @@ public class WealthTax implements Runnable {
                         "%count%", String.valueOf(count),
                         "%amount%", DataFormat.shown(collected)));
             }
-            XConomy.getInstance().logger(null, 0, "[财富税] 结算完成：玩家 "
-                    + count + " 名，共 " + DataFormat.shown(collected));
+            if (count == 0 && SQLWealthTax.isCompleted(today) && SQLWealthTax.affected(today) > 0) {
+                // 今日已由本服或其它子服结算过，逐人记录避免了重复扣款
+                XConomy.getInstance().logger(null, 0, "[财富税] 今日已结算：玩家 "
+                        + SQLWealthTax.affected(today) + " 名，共 "
+                        + DataFormat.shown(SQLWealthTax.total(today)) + "，本次无新增");
+            } else {
+                XConomy.getInstance().logger(null, 0, "[财富税] 结算完成：玩家 "
+                        + count + " 名，共 " + DataFormat.shown(collected));
+            }
         } catch (Throwable t) {
             XConomy.getInstance().logger(null, 1, "[财富税] 结算异常: " + t.getMessage());
             t.printStackTrace();
